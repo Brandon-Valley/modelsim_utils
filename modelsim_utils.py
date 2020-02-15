@@ -73,7 +73,7 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     
     time.sleep(7)  # not optimized!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      
-    # shift into terminal pane from the sim pane
+    # shift into console pane from the sim pane
     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
     
     # enter command that does nothing because if you don't, you can't get into the wave pane for some reason
@@ -84,8 +84,16 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
     
     # zoom full to show the part of the wave you care about
+    time.sleep(.3)
     k.press_and_release(ZOOM_FULL__WAVE_PANE_SHORTCUT_STR)
     
+    # shift into console window because I feel like it
+    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
     
     
     
