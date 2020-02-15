@@ -1,5 +1,6 @@
 ''' -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- All Utilities Standard Header -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- '''
 import sys, os    ;     sys.path.insert(1, os.path.join(sys.path[0], os.path.dirname(os.path.abspath(__file__)))) # to allow for relative imports, delete any imports under this line
+import auto_key_utils
 
 util_submodule_l = ['exception_utils', 'hotkey_utils', 'focus_utils']  # list of all imports from local util_submodules that could be imported elsewhere to temporarily remove from sys.modules
 
@@ -27,6 +28,8 @@ import auto_key_utils as aku
 import time 
 import keyboard as k
 
+# for exception handling 
+import _tkinter 
 
 
 NEXT_PANE__SHORTCUT_STR        = 'Shift+f4'
@@ -46,13 +49,29 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     
     print('waiting for hotkey press: ', RAISE_CMD_WINDOW__SHORTCUT_STR, '...')
     hu.wait_for_hotkey_press(RAISE_CMD_WINDOW__SHORTCUT_STR)
-    k.write("do " + do_file_name)
-    time.sleep(.3)
-    k.press_and_release("enter")
-    console_output = aku.make_then_get_selection(deselect_key_str = 'right arrow', error_on_empty_clipboard = True) # sim:/nand4_tb/i_a sim:/nand4_tb/i_b sim:/nand4_tb/i_c sim:/nand4_tb/i_d sim:/nand4_tb/o_f 
-    print(console_output) # sim:/nand4_tb/duv/NAND2_1/i_a sim:/nand4_tb/duv/NAND2_1/i_b sim:/nand4_tb/duv/NAND2_1/o_f 
+    
+    cmd = "do " + do_file_name
+    k.write(cmd)
+#     time.sleep(.3)# need ???????????????????????????????????????????????????????
+    
+#     hu.wait_for_hotkey_press('a', print_waiting_msg = True)
 
     
+    # check if cmd window stayed up long enough to enter command, if not, do it again
+    try:
+        selection = aku.make_then_get_selection(select_mode = 'shift_home', error_on_empty_clipboard = True)
+    except(_tkinter.TclError):
+        time.sleep(.3)
+        k.press_and_release(RAISE_CMD_WINDOW__SHORTCUT_STR)
+        k.write(cmd)
+    
+    
+    
+    k.press_and_release("enter")
+#     console_output = aku.make_then_get_selection(deselect_key_str = 'right arrow', error_on_empty_clipboard = True) # sim:/nand4_tb/i_a sim:/nand4_tb/i_b sim:/nand4_tb/i_c sim:/nand4_tb/i_d sim:/nand4_tb/o_f 
+#     print(console_output) # sim:/nand4_tb/duv/NAND2_1/i_a sim:/nand4_tb/duv/NAND2_1/i_b sim:/nand4_tb/duv/NAND2_1/o_f 
+ 
+     
 #     print('waiting for hotkey press: ', RAISE_CMD_WINDOW__SHORTCUT_STR, '...')
 #     hu.wait_for_hotkey_press(RAISE_CMD_WINDOW__SHORTCUT_STR)
 # 
