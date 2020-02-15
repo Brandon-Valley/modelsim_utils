@@ -1,7 +1,7 @@
 ''' -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- All Utilities Standard Header -- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV -- '''
 import sys, os    ;     sys.path.insert(1, os.path.join(sys.path[0], os.path.dirname(os.path.abspath(__file__)))) # to allow for relative imports, delete any imports under this line
 
-util_submodule_l = ['exception_utils', 'hotkey_utils']  # list of all imports from local util_submodules that could be imported elsewhere to temporarily remove from sys.modules
+util_submodule_l = ['exception_utils', 'hotkey_utils', 'focus_utils']  # list of all imports from local util_submodules that could be imported elsewhere to temporarily remove from sys.modules
 
 # temporarily remove any modules that could conflict with this file's local util_submodule imports
 og_sys_modules = sys.modules    ;    pop_l = [] # save the original sys.modules to be restored at the end of this file
@@ -14,6 +14,7 @@ util_submodule_import_check_count = 0 # count to make sure you don't add a local
 
 from util_submodules.hotkey_utils    import hotkey_utils    as hu      ; util_submodule_import_check_count += 1
 from util_submodules.exception_utils import exception_utils as eu      ; util_submodule_import_check_count += 1
+from util_submodules.focus_utils     import focus_utils     as fu      ; util_submodule_import_check_count += 1
 
 ''' ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ '''
 if util_submodule_import_check_count != len(util_submodule_l)    :    raise Exception("ERROR:  You probably added a local util_submodule import without adding it to the util_submodule_l")
@@ -21,18 +22,17 @@ if util_submodule_import_check_count != len(util_submodule_l)    :    raise Exce
 
 
 
-import focus_utils
-
-
 import time 
 import keyboard as k
+
+
 
 # press Alt + / when modelsim opens
 # project must be open in modelsim
 # do file must be in project dir (such that if you were to start typing it in the modelsim cmd window, you could autocomplete)
 def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
 
-    focus_utils.set_foreground("ModelSim")
+    fu.set_foreground("ModelSim")
 
     time.sleep(.3)
     hu.wait_for_hotkey_press("Alt+/")
@@ -58,5 +58,16 @@ if __name__ == "__main__":
     print('In Main: modelsim_utils')
     
     auto_run('run_cmd__NAND4.do')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     print('End of Main: modelsim_utils')
