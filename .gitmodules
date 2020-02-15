@@ -1,0 +1,10 @@
+[submodule "util_submodules/hotkey_utils"]
+	path = util_submodules/hotkey_utils
+	url = https://github.com/Brandon-Valley/hotkey_utils.git
+  update = rebase
+  branch = master
+[submodule "util_submodules/exception_utils"]
+	path = util_submodules/exception_utils
+	url = https://github.com/Brandon-Valley/exception_utils.git
+  update = rebase
+  branch = master
