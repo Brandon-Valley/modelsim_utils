@@ -32,33 +32,31 @@ import keyboard as k
 import _tkinter 
 
 
+
 NEXT_PANE__SHORTCUT_STR           = 'Shift+f4'
 RAISE_CMD_WINDOW__SHORTCUT_STR    = 'Alt+/'
 ZOOM_FULL__WAVE_PANE_SHORTCUT_STR = 'f'
 
+
+
 # press Alt + / when modelsim opens
 # project must be open in modelsim
 # do file must be in project dir (such that if you were to start typing it in the modelsim cmd window, you could autocomplete)
+# might need longer run_to_pane_shift_sleep_sec if compiling a lot of files? - 7 seconds seems to work well for compiling 8 files and running from Notepad++, not sure above that
 def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
 
     fu.set_foreground("ModelSim")
 
+    # wait for user to press Alt + / because for some reason if you are in the wave window (maybe only after zoom full?) when you set focus, only manual key presses work
     time.sleep(.3)
+    hu.wait_for_hotkey_press(RAISE_CMD_WINDOW__SHORTCUT_STR, print_waiting_msg = True)
     
-    
-    
-    
-    print('waiting for hotkey press: ', RAISE_CMD_WINDOW__SHORTCUT_STR, '...')
-    hu.wait_for_hotkey_press(RAISE_CMD_WINDOW__SHORTCUT_STR)
-    
+    # make and write first round of the command to run the custom do file
     cmd = "do " + do_file_name
     k.write(cmd)
-#     time.sleep(.3)# need ???????????????????????????????????????????????????????
-    
-#     hu.wait_for_hotkey_press('a', print_waiting_msg = True)
 
-    
     # check if cmd window stayed up long enough to enter command, if not, do it again
+    # modelsim seems to freak out any time you do any keyboard shortcuts while you are in / trying to shift to the wave pane
     try:
         selection = aku.make_then_get_selection(select_mode = 'shift_home', error_on_empty_clipboard = True)
     except(_tkinter.TclError):
@@ -66,12 +64,11 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
         k.press_and_release(RAISE_CMD_WINDOW__SHORTCUT_STR)
         k.write(cmd)
     
-    
     # run command to execute do file
     k.press_and_release("enter")
     
-    
-    time.sleep(7)  # not optimized!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # wait for do file to run
+    time.sleep(run_to_pane_shift_sleep_sec)
      
     # shift into console pane from the sim pane
     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
@@ -97,37 +94,6 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     
     
     
-#     k.write
-    
-    
-    
-#     console_output = aku.make_then_get_selection(deselect_key_str = 'right arrow', error_on_empty_clipboard = True) # sim:/nand4_tb/i_a sim:/nand4_tb/i_b sim:/nand4_tb/i_c sim:/nand4_tb/i_d sim:/nand4_tb/o_f 
-#     print(console_output) # sim:/nand4_tb/duv/NAND2_1/i_a sim:/nand4_tb/duv/NAND2_1/i_b sim:/nand4_tb/duv/NAND2_1/o_f 
- 
-     
-#     print('waiting for hotkey press: ', RAISE_CMD_WINDOW__SHORTCUT_STR, '...')
-#     hu.wait_for_hotkey_press(RAISE_CMD_WINDOW__SHORTCUT_STR)
-# 
-#     k.write("do " + do_file_name)
-#     time.sleep(.3)
-#     k.press_and_release("enter")
-#     
-# #     time.sleep(7)
-#     
-# #     console_output = aku.get_select_all(deselect_key_str = 'right arrow')
-# #     print(console_output)
-#     
-#     time.sleep(run_to_pane_shift_sleep_sec)
-#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-# 
-# #     k.press_and_release("shift+f4")
-# #     k.press_and_release("shift+f4")
-#     k.press_and_release("esc")
-#     k.write('empty command to shift focus')
-# #     k.press_and_release("enter")
-# #     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-# #     k.press_and_release("f")
-
 
 
 
