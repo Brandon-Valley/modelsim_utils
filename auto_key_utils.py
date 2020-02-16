@@ -53,6 +53,8 @@ def get_selection(deselect_key_str = None, error_on_empty_clipboard = False):
     
     k.press_and_release('Ctrl+c')    
     
+    time.sleep(.3)
+    
     new_clipboard = cu.get_clipboard()
     
     if error_on_empty_clipboard and str(new_clipboard) == '':
