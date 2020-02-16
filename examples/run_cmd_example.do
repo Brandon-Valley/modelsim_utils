@@ -1,4 +1,4 @@
-project compileall
+#project compileall
 vsim -voptargs=+acc work.gate_1_tb
  
 add wave -position insertpoint  \
