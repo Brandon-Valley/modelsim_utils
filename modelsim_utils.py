@@ -34,10 +34,31 @@ import _tkinter
 
 
 NEXT_PANE__SHORTCUT_STR           = 'Shift+f4'
-RAISE_CMD_WINDOW__SHORTCUT_STR    = 'Alt+/'
+RAISE_CMD_WINDOW__SHORTCUT_STR    = 'Alt+/' 
 ZOOM_FULL__WAVE_PANE_SHORTCUT_STR = 'f'
 
+PANE_SEARCH_STR = 'qqq' # something that won't trigger anything in any pane
 
+# writes PANE_SEARCH_STR and tries to copy it until it works - which will be when you are in the console pane
+def shift_into_console_pane_from_any_pane():
+    while(True):
+        # in case you already have something typed in console, write on end so it can be deleted easily
+        k.press_and_release('end')
+        k.write(PANE_SEARCH_STR)
+        
+        # will get TclError if there was nothing to copy
+        try:
+            selection = aku.make_then_get_selection('end_shift_left_arrow', num_arrows = len(PANE_SEARCH_STR))
+            
+            # some panes will let you copy, but now write
+            if selection == PANE_SEARCH_STR:            
+                k.press_and_release('backspace') # to delete PANE_SEARCH_STR 
+                return
+        except(_tkinter.TclError):
+            pass
+            
+        print('Current pane is not console, moving to and checking next pane...')
+        k.press_and_release(NEXT_PANE__SHORTCUT_STR)
 
 # press Alt + / when modelsim opens
 # project must be open in modelsim
@@ -51,47 +72,57 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     time.sleep(.3)
     hu.wait_for_hotkey_press(RAISE_CMD_WINDOW__SHORTCUT_STR, print_waiting_msg = True)
     
-    # make and write first round of the command to run the custom do file
-    cmd = "do " + do_file_name
-    k.write(cmd)
-
-    # check if cmd window stayed up long enough to enter command, if not, do it again
-    # modelsim seems to freak out any time you do any keyboard shortcuts while you are in / trying to shift to the wave pane
-    try:
-        selection = aku.make_then_get_selection(select_mode = 'shift_home', error_on_empty_clipboard = True)
-    except(_tkinter.TclError):
-        time.sleep(.3)
-        k.press_and_release(RAISE_CMD_WINDOW__SHORTCUT_STR)
-        k.write(cmd)
-    
-    # run command to execute do file
-    k.press_and_release("enter")
-    
-    # wait for do file to run
-    time.sleep(run_to_pane_shift_sleep_sec)
-     
-    # shift into console pane from the sim pane
-    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-    
-    # enter command that does nothing because if you don't, you can't get into the wave pane for some reason
-    k.press_and_release('esc') # just in case you had an auto-complete window up before running this
-    k.press_and_release('enter')
-    
-    # shift into wave pane from terminal pane 
-    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-    
-    # zoom full to show the part of the wave you care about
+    # exit cmd window
     time.sleep(.3)
-    k.press_and_release(ZOOM_FULL__WAVE_PANE_SHORTCUT_STR)
+    k.press_and_release('enter') 
+#     time.sleep(.5)/
     
-    # shift into console window because I feel like it
-    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-    k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+    shift_into_console_pane_from_any_pane()
     
+    
+    
+    
+#     # make and write first round of the command to run the custom do file
+#     cmd = "do " + do_file_name
+#     k.write(cmd)
+# 
+#     # check if cmd window stayed up long enough to enter command, if not, do it again
+#     # modelsim seems to freak out any time you do any keyboard shortcuts while you are in / trying to shift to the wave pane
+#     try:
+#         selection = aku.make_then_get_selection(select_mode = 'shift_home', error_on_empty_clipboard = True)
+#     except(_tkinter.TclError):
+#         time.sleep(.3)
+#         k.press_and_release(RAISE_CMD_WINDOW__SHORTCUT_STR)
+#         k.write(cmd)
+#     
+#     # run command to execute do file
+#     k.press_and_release("enter")
+#     
+#     # wait for do file to run
+#     time.sleep(run_to_pane_shift_sleep_sec)
+#      
+#     # shift into console pane from the sim pane
+#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#     
+#     # enter command that does nothing because if you don't, you can't get into the wave pane for some reason
+#     k.press_and_release('esc') # just in case you had an auto-complete window up before running this
+#     k.press_and_release('enter')
+#     
+#     # shift into wave pane from terminal pane 
+#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#     
+#     # zoom full to show the part of the wave you care about
+#     time.sleep(.3)
+#     k.press_and_release(ZOOM_FULL__WAVE_PANE_SHORTCUT_STR)
+#     
+#     # shift into console window because I feel like it
+#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#     k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#     
     
     
 
