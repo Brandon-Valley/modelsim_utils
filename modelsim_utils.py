@@ -40,13 +40,20 @@ ZOOM_FULL__WAVE_PANE_SHORTCUT_STR = 'f'
 PANE_SEARCH_STR = 'qqq' # something that won't trigger anything in any pane
 COMPILE_ALL_CMD_STR = 'project compileall'
 
+MANY_FILES_TO_COMPILE_DELAY = 0#.1 # delay between each loop in shift_into_console_pane_from_any_pane(), only need for a lot of files
+MANY_FILES_TO_COMPILE_BEFORE_SEARCH_DELAY = 1 # just in case you are compiling a lot of files and you start in console window, it will mess up if you paste the SEARCH_STR before all files are done compiling
 
 
 # writes PANE_SEARCH_STR and tries to copy it until it works - which will be when you are in the console pane
 def shift_into_console_pane_from_any_pane():
+    
+    # just in case you are compiling a lot of files and you start in console window, it will mess up if you paste the SEARCH_STR before all files are done compiling
+    time.sleep(MANY_FILES_TO_COMPILE_BEFORE_SEARCH_DELAY) 
     while(True):
         # in case you already have something typed in console, write on end so it can be deleted easily
         k.press_and_release('end')
+
+        time.sleep(MANY_FILES_TO_COMPILE_DELAY) # only need this delay when you are compiling a lot of files
         k.write(PANE_SEARCH_STR)
         
         # will get TclError if there was nothing to copy
@@ -107,7 +114,11 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     console_output = aku.make_then_get_selection('all', deselect_key_str = 'right arrow')
     
     # if no errors, continue
-    if not error_in_console_output(console_output):
+    if not error_in_console_output(console_output):   
+    
+#         # sometimes PANE_SEARCH_STR gets left behind, delete it if it's there, so it doesn't mess up the next command
+#         aku.make_selection('end_shift_left_arrow', num_arrows = len(PANE_SEARCH_STR))
+#         k.press_and_release('backspace')
     
         # run do file
         k.press_and_release(RAISE_CMD_WINDOW__SHORTCUT_STR)
@@ -131,13 +142,13 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
         time.sleep(.3)
         k.press_and_release(ZOOM_FULL__WAVE_PANE_SHORTCUT_STR)
           
-        # shift into console window because I feel like it
-        k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-        k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-        k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-        k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-        k.press_and_release(NEXT_PANE__SHORTCUT_STR)
-        k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#         # shift into console window because I feel like it
+#         k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#         k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#         k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#         k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#         k.press_and_release(NEXT_PANE__SHORTCUT_STR)
+#         k.press_and_release(NEXT_PANE__SHORTCUT_STR)
     
     else:
         k.press_and_release('right arrow')  
