@@ -41,7 +41,7 @@ PANE_SEARCH_STR = 'qqq' # something that won't trigger anything in any pane
 COMPILE_ALL_CMD_STR = 'project compileall'
 
 MANY_FILES_TO_COMPILE_DELAY = 0#.1 # delay between each loop in shift_into_console_pane_from_any_pane(), only need for a lot of files
-MANY_FILES_TO_COMPILE_BEFORE_SEARCH_DELAY = 1 # just in case you are compiling a lot of files and you start in console window, it will mess up if you paste the SEARCH_STR before all files are done compiling
+MANY_FILES_TO_COMPILE_BEFORE_SEARCH_DELAY = 1.2 # just in case you are compiling a lot of files and you start in console window, it will mess up if you paste the SEARCH_STR before all files are done compiling
 
 
 # writes PANE_SEARCH_STR and tries to copy it until it works - which will be when you are in the console pane
@@ -86,7 +86,7 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     fu.set_foreground("ModelSim")
 
     # wait for user to press Alt + / because for some reason if you are in the wave window (maybe only after zoom full?) when you set focus, only manual key presses work
-    time.sleep(.3)
+    time.sleep(.1)
     hu.wait_for_hotkey_press(RAISE_CMD_WINDOW__SHORTCUT_STR, print_waiting_msg = True)
     
     # make and write first round of the command to run the custom do file
@@ -98,7 +98,7 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     try:
         selection = aku.make_then_get_selection(select_mode = 'shift_home', error_on_empty_clipboard = True)
     except(_tkinter.TclError):
-        time.sleep(.3)
+        time.sleep(.1)
         k.press_and_release(RAISE_CMD_WINDOW__SHORTCUT_STR)
         k.write(COMPILE_ALL_CMD_STR)
      
@@ -106,7 +106,7 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
     k.press_and_release("enter")
      
     # shift into console in order to check the output of compileall to see if there were any errors    
-    time.sleep(.3)
+    time.sleep(.1)
     shift_into_console_pane_from_any_pane()  
     
     # get console output to check if there were any errors
@@ -139,7 +139,7 @@ def auto_run(do_file_name = 'run_cmd.do', run_to_pane_shift_sleep_sec = 7):
         k.press_and_release(NEXT_PANE__SHORTCUT_STR)
           
         # zoom full to show the part of the wave you care about
-        time.sleep(.3)
+        time.sleep(.1)
         k.press_and_release(ZOOM_FULL__WAVE_PANE_SHORTCUT_STR)
           
 #         # shift into console window because I feel like it
